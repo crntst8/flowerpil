@@ -2,6 +2,8 @@
 
 Flowerpil is a curator-focused music publishing platform. It combines public editorial surfaces, curator playlist tooling, cross-platform DSP workflows, and admin operations in one system.
 
+**deployed version: <https://flowerpil.io>**
+
 ## What Flowerpil Includes
 
 - A public discovery site with a unified home feed.
