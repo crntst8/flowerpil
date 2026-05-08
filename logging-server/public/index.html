@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Flowerpil Tester Feedback Logs</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #070707;
+      color: #f2f2f2;
+    }
+    body {
+      margin: 0;
+      padding: 32px;
+      background: radial-gradient(circle at top, rgba(255, 115, 247, 0.06), transparent 45%), #070707;
+      min-height: 100vh;
+    }
+    h1 {
+      margin: 0 0 24px;
+      font-size: 1.6rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .filters label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .filters input {
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.05);
+      color: inherit;
+      padding: 8px 10px;
+    }
+    button.primary {
+      background: #ff68d7;
+      color: #040404;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+    }
+    button.secondary {
+      background: transparent;
+      color: rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      vertical-align: top;
+    }
+    th {
+      text-align: left;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.65;
+    }
+    tr:hover {
+      background: rgba(255, 255, 255, 0.04);
+    }
+    .logs-panel {
+      margin-top: 24px;
+      background: rgba(15, 15, 15, 0.92);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 16px;
+      max-height: 320px;
+      overflow: auto;
+      white-space: pre-wrap;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.85rem;
+    }
+    .pagination {
+      margin-top: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+    }
+    .pagination button {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: inherit;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .muted {
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body>
+  <h1>Tester Feedback</h1>
+  <section class="filters">
+    <label>User Email
+      <input type="text" id="filter-email" placeholder="curator@..." />
+    </label>
+    <label>URL / Route
+      <input type="text" id="filter-url" placeholder="/curator/..." />
+    </label>
+    <label>Search
+      <input type="text" id="filter-search" placeholder="message contains..." />
+    </label>
+    <label>From
+      <input type="datetime-local" id="filter-from" />
+    </label>
+    <label>To
+      <input type="datetime-local" id="filter-to" />
+    </label>
+    <div style="display:flex;align-items:flex-end;gap:8px">
+      <button class="secondary" id="export-selected">Export Selected</button>
+      <button class="secondary" id="export-all">Export All</button>
+      <button class="secondary" id="clear-feedback">Clear All</button>
+      <button class="primary" id="apply-filters">Refresh</button>
+    </div>
+  </section>
+
+  <table>
+    <thead>
+      <tr>
+        <th><input type="checkbox" id="select-page" /></th>
+        <th>Created</th>
+        <th>User / Curator</th>
+        <th>Message</th>
+        <th>Route</th>
+        <th>Logs</th>
+      </tr>
+    </thead>
+    <tbody id="feedback-rows">
+      <tr><td colspan="6" class="muted">Loading…</td></tr>
+    </tbody>
+  </table>
+
+  <div class="pagination">
+    <div id="page-info" class="muted"></div>
+    <div style="display:flex;gap:8px">
+      <button id="prev-page">Prev</button>
+      <button id="next-page">Next</button>
+    </div>
+  </div>
+
+  <section id="logs-section" style="display:none">
+    <h2 style="font-size:1rem;font-weight:600;margin-top:36px">Correlated Logs</h2>
+    <div class="logs-panel" id="logs-output">Select “View logs” to fetch details.</div>
+  </section>
+
+  <script>
+    const state = {
+      page: 1,
+      pageSize: 20,
+      totalPages: 1,
+      lastFilters: {},
+      currentRows: [],
+      selected: new Set()
+    };
+
+    const rowsEl = document.getElementById('feedback-rows');
+    const pageInfoEl = document.getElementById('page-info');
+    const logsSection = document.getElementById('logs-section');
+    const logsOutput = document.getElementById('logs-output');
+    const clearButton = document.getElementById('clear-feedback');
+    const selectPageCheckbox = document.getElementById('select-page');
+    const exportSelectedBtn = document.getElementById('export-selected');
+    const exportAllBtn = document.getElementById('export-all');
+
+    const collectFilters = () => {
+      return {
+        email: document.getElementById('filter-email').value.trim(),
+        url: document.getElementById('filter-url').value.trim(),
+        search: document.getElementById('filter-search').value.trim(),
+        from: document.getElementById('filter-from').value,
+        to: document.getElementById('filter-to').value
+      };
+    };
+
+    const buildQuery = (filters) => {
+      const params = new URLSearchParams();
+      params.set('page', state.page);
+      params.set('pageSize', state.pageSize);
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value) params.set(key, value);
+      });
+      return params.toString();
+    };
+
+    const parseUtcDate = (value) => {
+      if (!value) return null;
+      const raw = value.includes('T') ? value : value.replace(' ', 'T');
+      const withZone = /[zZ+:-]/.test(raw.slice(-6)) ? raw : `${raw}Z`;
+      const date = new Date(withZone);
+      return Number.isNaN(date.getTime()) ? null : date;
+    };
+
+    const updateSelectPageCheckbox = () => {
+      if (!selectPageCheckbox) return;
+      const rows = state.currentRows;
+      selectPageCheckbox.disabled = !rows.length;
+      if (!rows.length) {
+        selectPageCheckbox.checked = false;
+        selectPageCheckbox.indeterminate = false;
+        return;
+      }
+      let selectedCount = 0;
+      rows.forEach((row) => {
+        if (state.selected.has(row.action_id)) {
+          selectedCount += 1;
+        }
+      });
+      if (selectedCount === 0) {
+        selectPageCheckbox.checked = false;
+        selectPageCheckbox.indeterminate = false;
+      } else if (selectedCount === rows.length) {
+        selectPageCheckbox.checked = true;
+        selectPageCheckbox.indeterminate = false;
+      } else {
+        selectPageCheckbox.checked = false;
+        selectPageCheckbox.indeterminate = true;
+      }
+    };
+
+    const updateExportButtons = () => {
+      if (exportSelectedBtn) {
+        exportSelectedBtn.disabled = state.selected.size === 0;
+      }
+    };
+
+    const renderRows = (items) => {
+      state.currentRows = items;
+      if (!items.length) {
+        rowsEl.innerHTML = '<tr><td colspan="6" class="muted">No feedback recordings match the filters.</td></tr>';
+        updateSelectPageCheckbox();
+        updateExportButtons();
+        return;
+      }
+      const formatter = new Intl.DateTimeFormat('en-AU', {
+        dateStyle: 'short',
+        timeStyle: 'medium',
+        timeZone: 'Australia/Melbourne'
+      });
+      rowsEl.innerHTML = items.map((item) => {
+        const parsedDate = parseUtcDate(item.created_at);
+        const created = parsedDate ? formatter.format(parsedDate) : '–';
+        const email = item.user_email || '—';
+        const curator = item.curator_name || '—';
+        const msg = (item.message || '').slice(0, 160).replace(/[\n\r]+/g, ' ');
+        const url = item.url || '';
+        const checked = state.selected.has(item.action_id) ? 'checked' : '';
+        return `<tr>
+          <td><input type="checkbox" data-action="select-row" data-action-id="${item.action_id}" ${checked}></td>
+          <td>${created}</td>
+          <td><div>${email}</div><div class="muted">${curator}</div></td>
+          <td>${msg}</td>
+          <td class="muted">${url}</td>
+          <td><button data-action="logs" data-action-id="${item.action_id}" style="cursor:pointer">View logs</button></td>
+        </tr>`;
+      }).join('');
+      updateSelectPageCheckbox();
+      updateExportButtons();
+    };
+
+    const fetchFeedback = async () => {
+      rowsEl.innerHTML = '<tr><td colspan="6" class="muted">Loading…</td></tr>';
+      state.currentRows = [];
+      updateSelectPageCheckbox();
+      updateExportButtons();
+      const filters = collectFilters();
+      state.lastFilters = filters;
+      const query = buildQuery(filters);
+      const response = await fetch(`/api/feedback?${query}`);
+      const data = await response.json();
+      if (!response.ok) {
+        rowsEl.innerHTML = `<tr><td colspan="6" class="muted">Error loading feedback: ${data.error || response.statusText}</td></tr>`;
+        state.currentRows = [];
+        updateSelectPageCheckbox();
+        updateExportButtons();
+        return;
+      }
+      const pagination = data.pagination || { page: 1, totalPages: 1, total: (data.data || []).length };
+      renderRows(data.data || []);
+      state.totalPages = pagination.totalPages;
+      pageInfoEl.textContent = `Page ${pagination.page} of ${Math.max(1, pagination.totalPages)} · ${pagination.total} records`;
+    };
+
+    const fetchAllEntries = async () => {
+      const filters = state.lastFilters || {};
+      const results = [];
+      const pageSize = 200;
+      let page = 1;
+      let totalPages = 1;
+
+      do {
+        const params = new URLSearchParams();
+        params.set('page', page);
+        params.set('pageSize', pageSize);
+        Object.entries(filters).forEach(([key, value]) => {
+          if (value) params.set(key, value);
+        });
+        const response = await fetch(`/api/feedback?${params.toString()}`);
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.error || response.statusText);
+        }
+        results.push(...(data.data || []));
+        totalPages = data.pagination?.totalPages || 1;
+        page += 1;
+      } while (page <= totalPages);
+
+      return results;
+    };
+
+    const gatherSelectedEntries = async () => {
+      const missing = new Set(state.selected);
+      const entries = [];
+
+      state.currentRows.forEach((row) => {
+        if (missing.has(row.action_id)) {
+          entries.push(row);
+          missing.delete(row.action_id);
+        }
+      });
+
+      if (missing.size === 0) {
+        return entries;
+      }
+
+      const allEntries = await fetchAllEntries();
+      allEntries.forEach((row) => {
+        if (missing.has(row.action_id)) {
+          entries.push(row);
+          missing.delete(row.action_id);
+        }
+      });
+
+      if (missing.size) {
+        missing.forEach((id) => state.selected.delete(id));
+      }
+
+      return entries;
+    };
+
+    const buildMarkdown = (entries) => {
+      const generatedAt = new Intl.DateTimeFormat('en-AU', {
+        dateStyle: 'full',
+        timeStyle: 'long',
+        timeZone: 'Australia/Melbourne'
+      }).format(new Date());
+
+      const entryFormatter = new Intl.DateTimeFormat('en-AU', {
+        dateStyle: 'full',
+        timeStyle: 'short',
+        timeZone: 'Australia/Melbourne'
+      });
+
+      const lines = ['# Tester Feedback Export', `Generated: ${generatedAt}`, ''];
+
+      entries.forEach((entry, index) => {
+        const parsed = parseUtcDate(entry.created_at);
+        const timestamp = parsed ? entryFormatter.format(parsed) : (entry.created_at || 'Unknown time');
+        lines.push(`## Feedback #${index + 1}`);
+        lines.push(`- **Action ID:** ${entry.action_id}`);
+        lines.push(`- **Received:** ${timestamp} (Australia/Melbourne)`);
+        lines.push(`- **User:** ${entry.user_email || 'Unknown'}`);
+        lines.push(`- **Curator:** ${entry.curator_name || 'Unknown'}`);
+        lines.push(`- **URL:** ${entry.url || 'Unknown'}`);
+        lines.push('');
+        const body = entry.message && entry.message.trim() ? entry.message.trim() : '(no message)';
+        lines.push('```');
+        lines.push(body);
+        lines.push('```');
+        lines.push('');
+      });
+
+      return lines.join('\n');
+    };
+
+    const downloadMarkdown = (content, filename = 'feedback-export.md') => {
+      const blob = new Blob([content], { type: 'text/markdown' });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = filename;
+      document.body.appendChild(anchor);
+      anchor.click();
+      document.body.removeChild(anchor);
+      URL.revokeObjectURL(url);
+    };
+
+    document.getElementById('apply-filters').addEventListener('click', () => {
+      state.page = 1;
+      fetchFeedback();
+    });
+    document.getElementById('prev-page').addEventListener('click', () => {
+      if (state.page <= 1) return;
+      state.page -= 1;
+      fetchFeedback();
+    });
+    document.getElementById('next-page').addEventListener('click', () => {
+      if (state.page >= state.totalPages) return;
+      state.page += 1;
+      fetchFeedback();
+    });
+
+    clearButton.addEventListener('click', async () => {
+      if (!confirm('Clear all feedback entries?')) return;
+      try {
+        const response = await fetch('/api/feedback', { method: 'DELETE' });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          alert(data.error || 'Failed to clear feedback');
+          return;
+        }
+        state.selected.clear();
+        updateExportButtons();
+        state.page = 1;
+        fetchFeedback();
+      } catch (error) {
+        alert('Unexpected error clearing feedback');
+      }
+    });
+
+    if (selectPageCheckbox) {
+      selectPageCheckbox.addEventListener('change', (event) => {
+        const shouldSelect = event.target.checked;
+        state.currentRows.forEach((row) => {
+          if (shouldSelect) {
+            state.selected.add(row.action_id);
+          } else {
+            state.selected.delete(row.action_id);
+          }
+        });
+        renderRows(state.currentRows);
+      });
+    }
+
+    rowsEl.addEventListener('change', (event) => {
+      const target = event.target;
+      if (target.dataset.action === 'select-row') {
+        const actionId = target.dataset.actionId;
+        if (target.checked) {
+          state.selected.add(actionId);
+        } else {
+          state.selected.delete(actionId);
+        }
+        updateSelectPageCheckbox();
+        updateExportButtons();
+      }
+    });
+
+    exportSelectedBtn.addEventListener('click', async () => {
+      if (!state.selected.size) {
+        alert('Select at least one feedback entry to export.');
+        return;
+      }
+      try {
+        const entries = await gatherSelectedEntries();
+        updateSelectPageCheckbox();
+        updateExportButtons();
+        if (!entries.length) {
+          alert('No selected entries available to export.');
+          return;
+        }
+        const markdown = buildMarkdown(entries);
+        downloadMarkdown(markdown);
+      } catch (error) {
+        console.error('Export selected failed', error);
+        alert('Failed to export selected entries.');
+      }
+    });
+
+    exportAllBtn.addEventListener('click', async () => {
+      if (!confirm('Export all feedback entries matching the current filters?')) {
+        return;
+      }
+      try {
+        const entries = await fetchAllEntries();
+        if (!entries.length) {
+          alert('No feedback entries found for the current filters.');
+          return;
+        }
+        const markdown = buildMarkdown(entries);
+        downloadMarkdown(markdown);
+      } catch (error) {
+        console.error('Export all failed', error);
+        alert('Failed to export feedback entries.');
+      }
+    });
+
+    rowsEl.addEventListener('click', async (event) => {
+      const target = event.target;
+      if (target.dataset.action === 'logs') {
+        const actionId = target.dataset.actionId;
+        logsSection.style.display = 'block';
+        logsOutput.textContent = 'Fetching logs…';
+        try {
+          const response = await fetch(`/api/feedback/${actionId}/logs`);
+          const data = await response.json();
+          if (!response.ok) {
+            logsOutput.textContent = `Unable to fetch logs: ${data.error || response.statusText}`;
+            return;
+          }
+          if (!data.logs || !data.logs.length) {
+            logsOutput.textContent = 'No log entries available for this window.';
+            return;
+          }
+          logsOutput.textContent = data.logs.map((entry) => JSON.stringify(entry, null, 2)).join('\n');
+        } catch (error) {
+          logsOutput.textContent = `Unexpected error: ${error.message}`;
+        }
+      }
+    });
+
+    updateExportButtons();
+    fetchFeedback();
+  </script>
+</body>
+</html>

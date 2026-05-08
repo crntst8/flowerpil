@@ -1,0 +1,61 @@
+{
+  "name": "portable-linking-worker",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Standalone worker for cross-platform music linking with distributed coordination",
+  "type": "module",
+  "main": "portable-link-worker.js",
+  "scripts": {
+    "start": "node portable-link-worker.js",
+    "dev": "LOG_LEVEL=debug LOG_FORMAT=text node portable-link-worker.js",
+    "pm2:start": "pm2 start ecosystem.config.cjs",
+    "pm2:start:prod": "pm2 start ecosystem.config.cjs --env production",
+    "pm2:stop": "pm2 stop all",
+    "pm2:restart": "pm2 restart all",
+    "pm2:logs": "pm2 logs",
+    "pm2:monit": "pm2 monit",
+    "pm2:delete": "pm2 delete all",
+    "pm2:save": "pm2 save",
+    "docker:build": "docker build -t flowerpil/portable-linking-worker:latest .",
+    "docker:run": "docker run --env-file .env -p 3001:3001 flowerpil/portable-linking-worker:latest",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:ps": "docker-compose ps",
+    "docker:restart": "docker-compose restart",
+    "health": "curl -s http://localhost:3001/health | jq",
+    "metrics": "curl -s http://localhost:3001/metrics | jq",
+    "logs:create": "mkdir -p logs",
+    "clean": "rm -rf node_modules logs/*.log",
+    "install:prod": "npm ci --only=production",
+    "validate:env": "node -e \"import('dotenv').then(d => d.default.config()).then(() => import('./config.js')).then(m => { const c = m.getConfig(); m.validateConfig(c); console.log('✓ Configuration valid'); }).catch(e => { console.error('✗', e.message); process.exit(1); })\""
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "music",
+    "linking",
+    "cross-platform",
+    "worker",
+    "spotify",
+    "tidal",
+    "apple-music",
+    "distributed",
+    "portable"
+  ],
+  "author": "Flowerpil",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/flowerpil/production"
+  },
+  "dependencies": {
+    "axios": "^1.7.7",
+    "dotenv": "^16.4.5",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {},
+  "optionalDependencies": {}
+}
+

@@ -1,0 +1,119 @@
+# =============================================================================
+# Systemd Service Unit for Portable Linking Worker
+# =============================================================================
+#
+# Installation:
+#   1. Copy this file to /etc/systemd/system/linking-worker.service
+#   2. Update User, Group, WorkingDirectory, and Environment variables
+#   3. Reload systemd: sudo systemctl daemon-reload
+#   4. Enable service: sudo systemctl enable linking-worker
+#   5. Start service: sudo systemctl start linking-worker
+#   6. Check status: sudo systemctl status linking-worker
+#   7. View logs: sudo journalctl -u linking-worker -f
+#
+# Commands:
+#   sudo systemctl start linking-worker      # Start the service
+#   sudo systemctl stop linking-worker       # Stop the service
+#   sudo systemctl restart linking-worker    # Restart the service
+#   sudo systemctl status linking-worker     # Check status
+#   sudo systemctl enable linking-worker     # Enable auto-start on boot
+#   sudo systemctl disable linking-worker    # Disable auto-start
+#   sudo journalctl -u linking-worker        # View logs
+#   sudo journalctl -u linking-worker -f     # Follow logs
+#
+# =============================================================================
+
+[Unit]
+Description=Flowerpil Portable Linking Worker
+Documentation=https://github.com/flowerpil/production
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+
+# User and group to run the service
+# IMPORTANT: Change these to your actual user/group
+User=worker
+Group=worker
+
+# Working directory - update this path
+WorkingDirectory=/opt/linking-worker/worker/portable
+
+# Command to execute
+ExecStart=/usr/bin/node portable-link-worker.js
+
+# Restart policy
+Restart=always
+RestartSec=10s
+
+# Start limit - prevent infinite restart loops
+StartLimitInterval=200s
+StartLimitBurst=5
+
+# Environment variables
+# IMPORTANT: Update these with your actual values
+# Consider using EnvironmentFile instead for sensitive data
+Environment="NODE_ENV=production"
+Environment="LINKING_API_BASE=https://api.flowerpil.io"
+Environment="LINKING_WORKER_KEY=your-secure-key-here"
+Environment="LINKING_WORKER_ID=systemd-worker-1"
+
+# Platform credentials (optional - add as needed)
+# Environment="SPOTIFY_CLIENT_ID=..."
+# Environment="SPOTIFY_CLIENT_SECRET=..."
+# Environment="TIDAL_CLIENT_ID=..."
+# Environment="TIDAL_CLIENT_SECRET=..."
+# Environment="APPLE_MUSIC_TEAM_ID=..."
+# Environment="APPLE_MUSIC_KEY_ID=..."
+# Environment="APPLE_MUSIC_PRIVATE_KEY_PATH=/opt/linking-worker/keys/AuthKey.p8"
+# Environment="APPLE_MUSIC_STOREFRONT=us"
+
+# Configuration
+Environment="LOG_LEVEL=info"
+Environment="LOG_FORMAT=json"
+Environment="HEALTH_CHECK_ENABLED=true"
+Environment="HEALTH_CHECK_PORT=3001"
+Environment="METRICS_ENABLED=true"
+
+# TLS
+Environment="NODE_TLS_REJECT_UNAUTHORIZED=1"
+
+# Alternative: Use environment file for sensitive data
+# Create a file at /etc/linking-worker/environment with KEY=VALUE pairs
+# EnvironmentFile=/etc/linking-worker/environment
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=linking-worker
+
+# Security hardening
+# Uncomment these for additional security
+
+# Process isolation
+# NoNewPrivileges=true
+# PrivateTmp=true
+# ProtectSystem=strict
+# ProtectHome=true
+# ReadWritePaths=/opt/linking-worker/logs
+
+# Network isolation
+# RestrictAddressFamilies=AF_INET AF_INET6
+# IPAddressAllow=10.0.0.0/8 172.16.0.0/12 192.168.0.0/16
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=512
+
+# Memory and CPU limits (optional)
+# MemoryMax=1G
+# CPUQuota=200%
+
+# Graceful shutdown
+TimeoutStopSec=30s
+KillMode=mixed
+KillSignal=SIGTERM
+
+[Install]
+WantedBy=multi-user.target

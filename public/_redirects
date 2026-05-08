@@ -1,0 +1,6 @@
+# API proxy to backend server
+/api/*  https://api.flowerpil.io/api/:splat  200
+
+# Single Page App routing
+/*   /index.html   200
+

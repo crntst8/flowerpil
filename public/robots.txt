@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://flowerpil.io/sitemap.xml

@@ -1,0 +1,774 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>New Playlist: Apple Flow</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="2b835cd3-78e0-80ef-a305-ce12eba9d781" class="page sans"><header><h1 class="page-title">New Playlist: Apple Flow</h1><p class="page-description"></p></header><div class="page-body"><h1 id="2b835cd3-78e0-80af-8ca8-c20c6fa7ed7d" class="block-color-teal_background">Getting Started</h1><figure class="block-color-yellow_background callout" style="white-space:pre-wrap;display:flex" id="2b835cd3-78e0-8034-99c0-e09b851ac711"><div style="font-size:1.5em"><span class="icon">⚠️</span></div><div style="width:100%"><h3 id="2b835cd3-78e0-800e-ae40-fa18d06e3125" class="">If you want to make the actual Apple playlist public, you must  click ‘copy link’ on the playlist <em>within</em> the Apple Music app</h3><p id="2b835cd3-78e0-801f-8d88-d2a9b791fba0" class="">You can still import with playlists, but sharing the actual Apple link won’t work until you click copy link. You <strong>do not</strong> need to paste it anywhere, it just makes it public. </p></div></figure><h2 id="2b835cd3-78e0-8027-9321-ff7061fe50a6" class="block-color-red_background">1. Change account type</h2><div id="2b835cd3-78e0-8068-ab56-c7872283495c" class="column-list"><div id="2b835cd3-78e0-8020-a43b-e6d0a5b91bcb" style="width:18.75%" class="column"><h3 id="2b835cd3-78e0-8041-9ca6-e9547439859d" class="">open dsp settings →</h3><p id="2b835cd3-78e0-80a0-a1ca-cb3b50b3411e" class="">
+</p></div><div id="2b835cd3-78e0-8096-a1ad-dd8a45447b10" style="width:31.25%" class="column"><figure id="2b835cd3-78e0-809f-a7fa-d42e0dba4288" class="image" style="text-align:left"><a href="New%20Playlist%20Apple%20Flow/1-dsp.jpg"><img style="width:432px" src="New%20Playlist%20Apple%20Flow/1-dsp.jpg"/></a><figcaption>on the curator dashboard, after logging in/signing up</figcaption></figure><p id="2b835cd3-78e0-80c2-9e5f-f0fc19ac9241" class="">
+</p></div><div id="2b835cd3-78e0-801d-846d-ddeb70113845" style="width:25%" class="column"><h3 id="2b835cd3-78e0-80d4-a176-fc56fb97fced" class=""><strong>then change account type →</strong></h3><p id="2b835cd3-78e0-80b9-b4aa-e27cee5f095a" class="">
+</p></div><div id="2b835cd3-78e0-80bb-8e7f-cb4430f0fce3" style="width:25%" class="column"><figure id="2b835cd3-78e0-803b-90a2-e088d385cef9" class="image" style="text-align:left"><a href="New%20Playlist%20Apple%20Flow/2-apple.jpg"><img style="width:432px" src="New%20Playlist%20Apple%20Flow/2-apple.jpg"/></a><figcaption>hit ‘use my own account instead’</figcaption></figure><p id="2b835cd3-78e0-8083-a149-d0a9371d2714" class="">
+</p></div></div><hr id="2b835cd3-78e0-80fc-be78-f9fbc1a5843b"/><h2 id="2b835cd3-78e0-80eb-923c-eec426b51c91" class="block-color-red_background">2. Connect your own account</h2><p id="2b835cd3-78e0-8070-8445-e7e4e3803771" class="">
+</p><p id="2b835cd3-78e0-8081-9a2d-dd6105e3cca8" class="">
+</p><div id="2b835cd3-78e0-8038-947a-c720dc295eae" class="column-list"><div id="2b835cd3-78e0-804f-b3b3-f98e261d4326" style="width:37.5%" class="column"><figure id="2b835cd3-78e0-8097-baef-cab6cad4119c" class="image" style="text-align:left"><a href="New%20Playlist%20Apple%20Flow/3-connect.jpg"><img style="width:432px" src="New%20Playlist%20Apple%20Flow/3-connect.jpg"/></a><figcaption>Click Use my own account instead, then CONNECT APPLE MUSIC</figcaption></figure></div><div id="2b835cd3-78e0-800b-8b06-fd2008a111df" style="width:62.5%" class="column"><p id="2b835cd3-78e0-8055-902f-e8b31c67b2ef" class="">
+</p><h3 id="2b835cd3-78e0-80be-9465-c4d85854083d" class="">← open <em>connect apple music</em></h3><figure class="block-color-yellow_background callout" style="white-space:pre-wrap;display:flex" id="2b835cd3-78e0-80ea-868e-d7ff9228a0c2"><div style="font-size:1.5em"><span class="icon">⚠️</span></div><div style="width:100%"><p id="2b835cd3-78e0-80c6-8827-fff76c2a4acd" class=""><strong>The login will open in a pop-up window. If nothing happens, check your url bar to see if popups are blocked. </strong></p></div></figure><p id="2b835cd3-78e0-8050-9c77-db77788479b3" class="">
+</p></div></div><hr id="2b835cd3-78e0-8050-b1d2-d8cd61600c81"/><h2 id="2b835cd3-78e0-80c7-b6f3-f6a16433492c" class="block-color-red_background">3. Confirm &amp; exit config</h2><p id="2b835cd3-78e0-80ea-874c-e60c28e25713" class="">
+</p><div id="2b835cd3-78e0-8015-bff6-dd513cca8ba8" class="column-list"><div id="2b835cd3-78e0-802a-ad11-d6b3211312b7" style="width:16.666666666666664%" class="column"><p id="2b835cd3-78e0-8050-babc-fc620f9a8369" class="">
+</p><h3 id="2b835cd3-78e0-8019-b2f9-e0b657e38c6b" class="">confirm it shows ‘using your account’ →</h3><p id="2b835cd3-78e0-8051-bddf-fcf364abf7c1" class="">
+</p></div><div id="2b835cd3-78e0-807a-b85a-f2075f1b4c8d" style="width:18.75%" class="column"><figure id="2b835cd3-78e0-804e-9206-eb468a2db465" class="image" style="text-align:left"><a href="New%20Playlist%20Apple%20Flow/4-using.jpg"><img style="width:432px" src="New%20Playlist%20Apple%20Flow/4-using.jpg"/></a><figcaption>Refresh the page if it gets stuck loading once the login closes</figcaption></figure></div><div id="2b835cd3-78e0-8011-bd74-c37b7c5eed2f" style="width:14.583333333333332%" class="column"><h3 id="2b835cd3-78e0-80b5-943e-e0ccb13781f3" class="">then go back to playlists → </h3><p id="2b835cd3-78e0-80df-87e0-ca4fd2861af1" class="">
+</p></div><div id="2b835cd3-78e0-800e-b748-cedea300052e" style="width:16.666666666666664%" class="column"><figure id="2b835cd3-78e0-801d-8407-cb70b7ec8747" class="image" style="text-align:left"><a href="New%20Playlist%20Apple%20Flow/5-playlists-tab.jpg"><img style="width:432px" src="New%20Playlist%20Apple%20Flow/5-playlists-tab.jpg"/></a></figure></div><div id="2b835cd3-78e0-80be-ad32-ee1c729ca2f2" style="width:12.5%" class="column"><h3 id="2b835cd3-78e0-803c-ae68-d5f400766ece" class="">open ‘create playlist’ →</h3></div><div id="2b835cd3-78e0-8093-a0af-ef91ae4627df" style="width:20.833333333333336%" class="column"><p id="2b835cd3-78e0-8099-a8ec-e8ddd3f47f2f" class="">
+</p><figure id="2b835cd3-78e0-80f5-a0e4-d72d519507b9" class="image" style="text-align:left"><a href="New%20Playlist%20Apple%20Flow/6-playlists.jpg"><img style="width:432px" src="New%20Playlist%20Apple%20Flow/6-playlists.jpg"/></a></figure><p id="2b835cd3-78e0-8044-b57e-d1f842932577" class="">
+</p></div></div><hr id="2b835cd3-78e0-80fc-94a7-d192ca1fb4c7"/><h2 id="2b835cd3-78e0-8023-8909-d2ffa9fed7d6" class="block-color-red_background">4. Open creator &amp; import</h2><p id="2b835cd3-78e0-8011-8277-fb6cacff5042" class="">
+</p><p id="2b835cd3-78e0-80c6-83fa-dd4e6cf1444d" class="">
+</p><div id="2b835cd3-78e0-8014-ae08-f1dba27abeff" class="column-list"><div id="2b835cd3-78e0-8057-974c-e2080e8c1263" style="width:25%" class="column"><h3 id="2b835cd3-78e0-8008-ad72-d72ffd80a664" class="">expand the import tools → </h3><p id="2b835cd3-78e0-8033-b002-f2d856fcaff2" class="">
+</p></div><div id="2b835cd3-78e0-80da-997e-c7f762946842" style="width:9.374999999999996%" class="column"><figure id="2b835cd3-78e0-8072-8b75-ea36a4b8b6d2" class="image" style="text-align:left"><a href="New%20Playlist%20Apple%20Flow/ca1d1c9f-9206-4b58-bd79-43d0035e12fa.png"><img style="width:240px" src="New%20Playlist%20Apple%20Flow/ca1d1c9f-9206-4b58-bd79-43d0035e12fa.png"/></a></figure></div><div id="2b835cd3-78e0-80c1-8ffb-c465af1e3518" style="width:28.125%" class="column"><h3 id="2b835cd3-78e0-8055-b23b-de3804f4d19f" class="">select the Apple Music tab and import your playlist →</h3><p id="2b835cd3-78e0-8005-803b-cbdb91fd939b" class="">
+</p></div><div id="2b835cd3-78e0-8013-9c9e-cb23815f06e0" style="width:37.5%" class="column"><figure id="2b835cd3-78e0-8071-8aa1-c970c6376d1f" class="image" style="text-align:left"><a href="New%20Playlist%20Apple%20Flow/Untitled_11.jpg"><img style="width:624px" src="New%20Playlist%20Apple%20Flow/Untitled_11.jpg"/></a></figure></div></div><p id="2b835cd3-78e0-80fa-a2a8-e829c41e20f1" class="">
+</p><p id="2b835cd3-78e0-8029-a426-c06b83563368" class="">
+</p><p id="2b835cd3-78e0-8064-b913-ebc4587d53f4" class="">
+</p><p id="2b835cd3-78e0-804c-9537-e3b6e2a35f08" class="">
+</p><h1 id="2b835cd3-78e0-802a-9ab3-f72ff1f08aad" class="block-color-teal_background">Making Playlists</h1><h1 id="2b835cd3-78e0-80a3-8736-f7e6b009413f" class="block-color-gray_background">Step 1: Track Editor</h1><p id="2b835cd3-78e0-808b-9121-f06cf081e711" class="">Once finished, tracks will appear in the editor. You can adjust / add the metadata and drag around to reorder. </p><figure id="2b835cd3-78e0-80fa-9046-eeedfa8168b4" class="image"><a href="New%20Playlist%20Apple%20Flow/track_row.jpg"><img style="width:681.984375px" src="New%20Playlist%20Apple%20Flow/track_row.jpg"/></a></figure><div id="2b835cd3-78e0-80eb-8967-d19e3fcdaa02" class="column-list"><div id="2b835cd3-78e0-804a-8c44-f436b73ccb02" style="width:50%" class="column"><h3 id="2b835cd3-78e0-80ef-8c4a-eca9e125907f" class="block-color-blue_background">Track Quotes</h3><p id="2b835cd3-78e0-801b-8935-df235d6defc0" class="">You can add quotes<strong> that will ammend on the top of the track if you’d like to provide additional context, thoughts, feelings.</strong></p></div><div id="2b835cd3-78e0-80f6-a6db-dd2eff35978c" style="width:50%" class="column"><h3 id="2b835cd3-78e0-80b0-9cc3-ced74f7b69df" class=""><mark class="highlight-blue_background"><strong>Adding Custom Sources [Bandcamp, Soundlcoud, Youtube etc)</strong></mark></h3><p id="2b835cd3-78e0-8067-871f-ea6af6fbd372" class="">Open the <strong>METADATA </strong>editor in the track row and navigate to <strong>Custom Sources</strong> to add links to other platforms of your choosing </p><p id="2b835cd3-78e0-8070-b989-c95b956b1be6" class="">
+</p></div></div><h1 id="2b835cd3-78e0-80cd-90bd-e22d1b0fcbc2" class="block-color-gray_background">Step 2: Playlist Details</h1><p id="2b835cd3-78e0-8097-bed6-d67cde942ba3" class="">Once you’re happy with the track order, metadata and quotes, move on to edit the <strong>Playlist Details</strong>. </p><p id="2b835cd3-78e0-8022-979d-e7d1ec11774b" class="">It’s mostly straightfoward things - title, short description (one-liner), full description (rich-text/linebreaks if you want longer text),</p><p id="2b835cd3-78e0-808d-852c-dfadcde55c11" class="">There’s some extra bits and bobs such as:</p><h3 id="2b835cd3-78e0-80c6-9626-e775a1d5663b" class="">Genres  </h3><p id="2b835cd3-78e0-8047-9c1c-e96af0e7d048" class="">These are displayed on the <strong>homepage links</strong> to the playlsits and are <strong>added manually</strong>. </p><div id="2b835cd3-78e0-804c-97c6-cd08cdf1a26b" class="column-list"><div id="2b835cd3-78e0-80b4-9288-d1c6ed8f7fc9" style="width:43.75%" class="column"><p id="2b835cd3-78e0-80af-b7b8-f2fedafbddaf" class="block-color-blue_background"><strong>Genre Hints</strong></p><p id="2b835cd3-78e0-80ed-b34d-f8ec8834520a" class="">Just autocomplete based on what you type - click to fillout.  <div class="indented"><figure id="2b835cd3-78e0-8093-b33f-e219a3ab0b66" class="image"><a href="New%20Playlist%20Apple%20Flow/f972472b-3370-43cf-8099-7ecc572a5859.png"><img style="width:480px" src="New%20Playlist%20Apple%20Flow/f972472b-3370-43cf-8099-7ecc572a5859.png"/></a></figure><p id="2b835cd3-78e0-8000-a678-eedf348fc010" class=""><div class="indented"><p id="2b835cd3-78e0-8062-a2dc-eba1e5898223" class="">                                           👇</p></div></p><figure id="2b835cd3-78e0-80f8-b271-fa0d00f527b1" class="image"><a href="New%20Playlist%20Apple%20Flow/genre_apply.jpg"><img style="width:480px" src="New%20Playlist%20Apple%20Flow/genre_apply.jpg"/></a></figure></div></p></div><div id="2b835cd3-78e0-80ee-86eb-fdcfd34f7e6b" style="width:56.25%" class="column"><p id="2b835cd3-78e0-80b5-ad56-e1401bc83e12" class="block-color-blue_background"><strong>Custom Genres</strong></p><p id="2b835cd3-78e0-8062-9df1-f46a80aa8614" class="">If you want to add your own genre, you can just ignore the hints and add!</p><figure id="2b835cd3-78e0-802f-a02a-ca3e59151388" class="image"><a href="New%20Playlist%20Apple%20Flow/2486db42-893a-4694-a4c6-d3df0c12ee26.png"><img style="width:528px" src="New%20Playlist%20Apple%20Flow/2486db42-893a-4694-a4c6-d3df0c12ee26.png"/></a></figure><p id="2b835cd3-78e0-805f-a102-cd973c272819" class="">                                                           👇</p><figure id="2b835cd3-78e0-8087-9bab-d7c0fb319ae5" class="image"><a href="New%20Playlist%20Apple%20Flow/69215c13-6abf-4073-b0a4-509450cb2335.png"><img style="width:528px" src="New%20Playlist%20Apple%20Flow/69215c13-6abf-4073-b0a4-509450cb2335.png"/></a></figure><p id="2b835cd3-78e0-8075-9d74-c9278cdeb728" class="">
+</p></div></div><hr id="2b835cd3-78e0-8041-ae44-e5ee1a07d80f"/><h3 id="2b835cd3-78e0-802a-baaf-dd222126fe0a" class="block-color-blue_background">Call-To-Action Button</h3><div id="2b835cd3-78e0-80d9-a533-f68cdfe17844" class="column-list"><div id="2b835cd3-78e0-804a-b947-c92afe1281eb" style="width:50%" class="column"><p id="2b835cd3-78e0-80ee-b5ca-e590685401cf" class="">
+</p><p id="2b835cd3-78e0-80eb-b99d-fc78b6d0669c" class=""><strong>You can add a link to any platform with your own CTA </strong></p><figure id="2b835cd3-78e0-8075-91b8-cd6d4b082d35" class="image"><a href="New%20Playlist%20Apple%20Flow/cta.jpg"><img style="width:624px" src="New%20Playlist%20Apple%20Flow/cta.jpg"/></a></figure><p id="2b835cd3-78e0-808e-ba5a-f01964ec7ce2" class="">
+</p><p id="2b835cd3-78e0-80a6-8252-fcc24aeefa16" class="">
+</p><figure id="2b835cd3-78e0-8091-86e6-ee3aea09ea17" class="image"><a href="New%20Playlist%20Apple%20Flow/image.png"><img style="width:331.984375px" src="New%20Playlist%20Apple%20Flow/image.png"/></a></figure></div><div id="2b835cd3-78e0-80c3-bb7b-c09055482a8b" style="width:49.99999999999999%" class="column"><p id="2b835cd3-78e0-8051-8fe7-fa39deb81e00" class=""><strong>Expand the add icon section if you want to use your own brand</strong></p><figure id="2b835cd3-78e0-8077-9b1e-eef2b97352cd" class="image"><a href="New%20Playlist%20Apple%20Flow/icon.jpg"><img style="width:576px" src="New%20Playlist%20Apple%20Flow/icon.jpg"/></a></figure><p id="2b835cd3-78e0-805e-a9f9-fc9243424abb" class="">
+</p><p id="2b835cd3-78e0-8056-9b02-dec5e5c12e20" class="">
+</p><p id="2b835cd3-78e0-8049-b24e-f6d56f046d09" class="">No icon will default back to this nice lil flower. </p></div></div><p id="2b835cd3-78e0-8041-a814-de34c25fd420" class="">
+</p><h1 id="2b835cd3-78e0-8070-9739-db1bfd4695ab" class="block-color-teal_background">Step 3: Playlist Details</h1><div id="2b835cd3-78e0-8033-b3dd-d4fd73a0c4e7" class="column-list"><div id="2b835cd3-78e0-80a9-8dba-cb9ba9de6c1d" style="width:50%" class="column"><p id="2b835cd3-78e0-8075-a225-c74d8bb8c77b" class="">
+</p><p id="2b835cd3-78e0-806a-913c-f8b96f234aaa" class="">
+</p><p id="2b835cd3-78e0-80a1-b8ae-e7848614ff38" class="">
+</p><p id="2b835cd3-78e0-80a6-baae-c3fbd591e23c" class="">
+</p><p id="2b835cd3-78e0-80c0-a670-f4a14a0d450a" class="">
+</p><h2 id="2b835cd3-78e0-803e-8593-f5a0b8b23f43" class="">Upload an image to use as the playlist cover!</h2><p id="2b835cd3-78e0-80ba-a5ca-c4df95161fda" class="">
+</p></div><div id="2b835cd3-78e0-8026-9997-e22d851fd282" style="width:50%" class="column"><figure id="2b835cd3-78e0-80f0-aac7-dfc14e160aeb" class="image"><a href="New%20Playlist%20Apple%20Flow/da059dce-d123-49d3-8a1e-29cd995eb764.png"><img style="width:434.78770131771597px" src="New%20Playlist%20Apple%20Flow/da059dce-d123-49d3-8a1e-29cd995eb764.png"/></a></figure></div></div><p id="2b835cd3-78e0-8026-87f4-c4c895c93d2b" class="">
+</p><hr id="2b835cd3-78e0-80e2-aae8-cd9ca79b52f0"/><h1 id="2b835cd3-78e0-80de-b37f-df1856c58caf" class="block-color-teal_background">Step 4: Publish Stage</h1><div id="2b835cd3-78e0-8053-a3b2-d72517122867" class="column-list"><div id="2b835cd3-78e0-803c-aa0e-e6a50f91e3bb" style="width:25%" class="column"><figure id="2b835cd3-78e0-80e6-b83c-e01ac690b811" class="image"><a href="New%20Playlist%20Apple%20Flow/flowerpil_dsp.jpg"><img style="width:306.4921875px" src="New%20Playlist%20Apple%20Flow/flowerpil_dsp.jpg"/></a></figure><p id="2b835cd3-78e0-80f6-be8e-f1f6c40c3480" class="">
+</p><p id="2b835cd3-78e0-80b4-9300-da8c68555997" class="">
+</p><figure id="2b835cd3-78e0-8087-97b7-c2f27af69064" class="image"><a href="New%20Playlist%20Apple%20Flow/image%201.png"><img style="width:306.484375px" src="New%20Playlist%20Apple%20Flow/image%201.png"/></a></figure></div><div id="2b835cd3-78e0-80e4-bfbd-f9dea9c05505" style="width:75%" class="column"><p id="2b835cd3-78e0-806d-a7e2-d5fa59949fb3" class="">
+</p><p id="2b835cd3-78e0-8089-88a3-d0070aaf2d09" class="">
+</p><h2 id="2b835cd3-78e0-807e-aeb0-e81356f34ee6" class="">Publish &amp; Export</h2><p id="2b835cd3-78e0-8034-89f3-fd48bd6ba6dc" class=""><strong>Exporting to site + DSPs (Spotify, Apple Music &amp; TIDAL)</strong></p><p id="2b835cd3-78e0-80b4-8801-eb1f931be7f5" class="">Select the platforms you wish to export to and configure which account to use (select Flowerpil if you dont have one)</p><p id="2b835cd3-78e0-8000-bdca-e5ada58f110e" class="">The links will add themselves back to the playlist upon export. </p><figure class="block-color-yellow_background callout" style="white-space:pre-wrap;display:flex" id="2b835cd3-78e0-8009-9c4d-ceeeb73b43a9"><div style="font-size:1.5em"><span class="icon">⚠️</span></div><div style="width:100%"><h3 id="2b835cd3-78e0-80b7-b5dd-e9ed5d1860ea" class="">You need to manually share by selecting “Copy Link” inside Apple Music</h3><p id="2b835cd3-78e0-80d4-b541-da6bb7ebd163" class="">It will not become public until you do this. There is no way for us to automate this, sorry!</p></div></figure><p id="2b835cd3-78e0-806f-a2eb-ff970f6af4d6" class="">
+</p><p id="2b835cd3-78e0-808f-85da-fcb4e097bc3a" class="">
+</p><p id="2b835cd3-78e0-8046-bdc9-eb56532bb4f5" class="">
+</p><h2 id="2b835cd3-78e0-807c-9bb3-d6414828e96d" class="">Publish Only</h2><p id="2b835cd3-78e0-80a1-bb85-c00a2799e79d" class=""><strong>This will skip the export stage and just publish to the site. </strong></p><p id="2b835cd3-78e0-803b-8409-fa756443bb1b" class="">You can go back and export/adjust in the editor after publication. </p><p id="2b835cd3-78e0-80a8-9842-cd95c9908fb7" class="">
+</p></div></div><hr id="2b835cd3-78e0-8007-8c34-c02d1ac139b5"/><h1 id="2b835cd3-78e0-802a-808d-c5762a145b24" class="block-color-teal_background">Step 5: Published!</h1><div id="2b835cd3-78e0-80e1-a1c2-ff635b17a532" class="column-list"><div id="2b835cd3-78e0-80e9-b871-e2ef1e73a5d2" style="width:50%" class="column"><p id="2b835cd3-78e0-803b-9c31-ddcc14126978" class="">
+</p><p id="2b835cd3-78e0-80e7-b922-f4239e41c52a" class="">
+</p><p id="2b835cd3-78e0-80b4-86a4-cd03dc205b79" class="">
+</p><p id="2b835cd3-78e0-809a-bba7-e33fa8a7744d" class=""><strong>Homepage</strong><div class="indented"><figure id="2b835cd3-78e0-8055-813b-df3ad7019d96" class="image"><a href="New%20Playlist%20Apple%20Flow/expandable.jpg"><img style="width:672px" src="New%20Playlist%20Apple%20Flow/expandable.jpg"/></a></figure><p id="2b835cd3-78e0-80b6-bb53-e2c9089f0c50" class="">
+</p></div></p></div><div id="2b835cd3-78e0-8046-b3cd-da5434db3cb7" style="width:50%" class="column"><p id="2b835cd3-78e0-805b-9849-c795544eb50c" class=""><strong>Playlist Page</strong></p><figure id="2b835cd3-78e0-8019-b115-c5536f109f4a" class="image"><a href="New%20Playlist%20Apple%20Flow/publushed.jpg"><img style="width:816px" src="New%20Playlist%20Apple%20Flow/publushed.jpg"/></a></figure></div></div><p id="2b835cd3-78e0-80b3-9779-d8a212facb8a" class="">
+</p><h1 id="2b835cd3-78e0-80b8-9d71-ce1ff971757a" class="block-color-teal_background">Want to share?</h1><h3 id="2b835cd3-78e0-8007-96dc-d3b3cd1a49d3" class="">You can share by opening the <strong>SHARE button </strong>on the playlist page</h3><div id="2b835cd3-78e0-8089-b457-fad28b1ffecc" class="column-list"><div id="2b835cd3-78e0-80de-9069-dbc76542d68f" style="width:25%" class="column"><figure id="2b835cd3-78e0-80d7-b5aa-fc4e820f3978" class="image"><a href="New%20Playlist%20Apple%20Flow/image%202.png"><img style="width:240px" src="New%20Playlist%20Apple%20Flow/image%202.png"/></a></figure><figure id="2b835cd3-78e0-80bc-b4aa-ed235cbd17f6" class="image"><a href="New%20Playlist%20Apple%20Flow/image%203.png"><img style="width:288px" src="New%20Playlist%20Apple%20Flow/image%203.png"/></a></figure></div><div id="2b835cd3-78e0-801e-a4b4-cb693cea8657" style="width:75%" class="column"><p id="2b835cd3-78e0-80cb-b1f8-c0c320aeae71" class="">
+</p><p id="2b835cd3-78e0-8004-8bd9-d3c2086eb43b" class="">
+</p><p id="2b835cd3-78e0-8048-9686-e4156f476430" class="">
+</p><p id="2b835cd3-78e0-80da-84a3-de665b6583cf" class="">
+</p><h3 id="2b835cd3-78e0-809e-90db-d4b352fc0ead" class="">Sharing to <strong>Instagram </strong>will generate an image </h3><p id="2b835cd3-78e0-80c3-8c52-ceae048e4512" class="">Use the <strong>copy URL</strong> function before doing this so you can paste into the <strong>link sticker</strong> in IG</p><p id="2b835cd3-78e0-8095-8c8a-ebb0ab7505a0" class="">
+</p><p id="2b835cd3-78e0-8069-8a13-ca9dc2705c20" class="">
+</p><p id="2b835cd3-78e0-8060-b797-f79f03ae2728" class="">
+</p><p id="2b835cd3-78e0-8056-9848-cd6c309eb43e" class="">
+</p><p id="2b835cd3-78e0-80e5-aba3-ca195b373109" class="">
+</p><p id="2b835cd3-78e0-8086-8b3b-c1b841ad4614" class="">
+</p><p id="2b835cd3-78e0-80cc-93d4-d820bf8a1e42" class="">
+</p><p id="2b835cd3-78e0-80aa-bbd5-dce9632f7be2" class="">
+</p><p id="2b835cd3-78e0-8019-bca6-d9619c950f4c" class="">
+</p><p id="2b835cd3-78e0-8023-b7cf-f03cde5a6b21" class="">
+</p><h3 id="2b835cd3-78e0-8018-b17c-ed156dc70e9e" class="">You can use the URL copied in the tracks (the link button) to share induvidual tracks</h3></div></div><p id="2b835cd3-78e0-808d-b9b3-daa23d44a5e6" class="">
+</p><h2 id="2b835cd3-78e0-8020-9f29-fa41573f755c" class="block-color-teal_background">Need to edit?</h2><div id="2b835cd3-78e0-8060-9c19-c06d98e8dc01" class="column-list"><div id="2b835cd3-78e0-801c-aa8f-e7f80ce46133" style="width:50%" class="column"><p id="2b835cd3-78e0-8044-b4a2-ca0961ed4fa1" class="">
+</p><h3 id="2b835cd3-78e0-80d1-a0ba-e412f1761cfd" class="">Use the sidebar on the homepage to go to <strong>DASHBOARD</strong> and hit EDIT on your playlist</h3><p id="2b835cd3-78e0-8075-a3c2-de0a8b147475" class="">
+</p></div><div id="2b835cd3-78e0-80d7-8b7b-ce6ad479c63f" style="width:50%" class="column"><figure id="2b835cd3-78e0-805c-96cd-d9e4988c4398" class="image"><a href="New%20Playlist%20Apple%20Flow/preedit.jpg"><img style="width:331.9921875px" src="New%20Playlist%20Apple%20Flow/preedit.jpg"/></a></figure></div></div><p id="2b835cd3-78e0-80fe-8d77-fed4769a6bcd" class="">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

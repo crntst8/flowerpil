@@ -1,0 +1,253 @@
+name: CI/CD - Portable Linking Worker
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'worker/portable/**'
+      - '.github/workflows/ci-cd.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'worker/portable/**'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+
+env:
+  NODE_VERSION: '18'
+  DOCKER_IMAGE: flowerpil/portable-linking-worker
+
+jobs:
+  # ============================================================================
+  # Validation & Testing
+  # ============================================================================
+  validate:
+    name: Validate Configuration & Code
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: worker/portable
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: worker/portable/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check for security vulnerabilities
+        run: npm audit --audit-level=moderate
+
+      - name: Validate package.json
+        run: |
+          node -e "const pkg = require('./package.json'); \
+                   console.log('✓ Package name:', pkg.name); \
+                   console.log('✓ Version:', pkg.version); \
+                   console.log('✓ Node version required:', pkg.engines.node);"
+
+      - name: Check file structure
+        run: |
+          echo "Checking required files..."
+          test -f portable-link-worker.js || (echo "Missing portable-link-worker.js" && exit 1)
+          test -f config.js || (echo "Missing config.js" && exit 1)
+          test -f logger.js || (echo "Missing logger.js" && exit 1)
+          test -f metrics.js || (echo "Missing metrics.js" && exit 1)
+          test -f health-server.js || (echo "Missing health-server.js" && exit 1)
+          test -f Dockerfile || (echo "Missing Dockerfile" && exit 1)
+          test -f .env.example || (echo "Missing .env.example" && exit 1)
+          echo "✓ All required files present"
+
+      - name: Validate configuration module
+        run: |
+          node -e "import('./config.js').then(() => console.log('✓ Configuration module valid')).catch(e => { console.error('✗ Configuration module error:', e.message); process.exit(1); })"
+
+  # ============================================================================
+  # Docker Build
+  # ============================================================================
+  docker-build:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    needs: validate
+    defaults:
+      run:
+        working-directory: worker/portable
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+        if: github.event_name != 'pull_request'
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.DOCKER_IMAGE }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: worker/portable
+          file: worker/portable/Dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64,linux/arm64
+
+      - name: Image digest
+        run: echo ${{ steps.meta.outputs.digest }}
+
+  # ============================================================================
+  # Deploy to Staging
+  # ============================================================================
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: docker-build
+    if: github.ref == 'refs/heads/develop' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'staging')
+    environment:
+      name: staging
+      url: https://staging.flowerpil.io
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to staging server
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.STAGING_SERVER_HOST }}
+          username: ${{ secrets.STAGING_SERVER_USER }}
+          key: ${{ secrets.STAGING_SERVER_SSH_KEY }}
+          script: |
+            cd /opt/linking-worker
+            docker-compose pull
+            docker-compose up -d
+            docker-compose logs --tail=50
+
+      - name: Wait for deployment
+        run: sleep 30
+
+      - name: Health check
+        run: |
+          curl -f http://${{ secrets.STAGING_SERVER_HOST }}:3001/health || exit 1
+          echo "✓ Staging deployment healthy"
+
+      - name: Notify deployment
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          text: 'Linking Worker deployed to staging'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+        if: always()
+
+  # ============================================================================
+  # Deploy to Production
+  # ============================================================================
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: docker-build
+    if: github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'production')
+    environment:
+      name: production
+      url: https://flowerpil.io
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to production servers
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.PRODUCTION_SERVER_HOST }}
+          username: ${{ secrets.PRODUCTION_SERVER_USER }}
+          key: ${{ secrets.PRODUCTION_SERVER_SSH_KEY }}
+          script: |
+            cd /opt/linking-worker
+
+            # Pull new image
+            docker-compose pull
+
+            # Rolling update - one worker at a time
+            for i in {1..3}; do
+              docker-compose up -d --no-deps --scale linking-worker=$i
+              sleep 10
+
+              # Health check
+              curl -f http://localhost:3001/health || exit 1
+            done
+
+            # Cleanup old images
+            docker image prune -f
+
+            echo "✓ Production deployment complete"
+
+      - name: Wait for deployment
+        run: sleep 30
+
+      - name: Production health check
+        run: |
+          curl -f http://${{ secrets.PRODUCTION_SERVER_HOST }}:3001/health || exit 1
+          curl -f http://${{ secrets.PRODUCTION_SERVER_HOST }}:3001/metrics || exit 1
+          echo "✓ Production deployment healthy"
+
+      - name: Notify deployment
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          text: 'Linking Worker deployed to production'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+        if: always()
+
+  # ============================================================================
+  # Cleanup
+  # ============================================================================
+  cleanup:
+    name: Cleanup Old Docker Images
+    runs-on: ubuntu-latest
+    needs: [deploy-staging, deploy-production]
+    if: always() && github.event_name != 'pull_request'
+
+    steps:
+      - name: Delete old Docker images
+        uses: vlaurin/action-ghcr-prune@v0.5.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          organization: flowerpil
+          container: portable-linking-worker
+          keep-younger-than: 30
+          keep-last: 5
+          prune-untagged: true

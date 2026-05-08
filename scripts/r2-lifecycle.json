@@ -1,0 +1,28 @@
+{
+  "rules": [
+    {
+      "id": "expire-backups-3-days",
+      "enabled": true,
+      "conditions": {
+        "prefix": "db/"
+      },
+      "deleteObjectsTransition": {
+        "condition": {
+          "type": "Age",
+          "maxAge": 259200
+        }
+      }
+    },
+    {
+      "id": "abort-multipart-1-day",
+      "enabled": true,
+      "conditions": {},
+      "abortMultipartUploadsTransition": {
+        "condition": {
+          "type": "Age",
+          "maxAge": 86400
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+## Private / excluded from public repo
+.private/
+
+## React, Node
+node_modules/
+dist/
+package-lock.json
+ecosystem.config.cjs
+
+## Keys
+auth/
+*.p8
+
+.DS_Store
+
+.env.local
+.env
+.env.slack
+
+## Database
+flowerpil.db
+data/
+
+## Storage
+storage/uploads/
+storage/*.db
+storeage/
+
+## Logs
+logs/
+*.log
+
+##LLM
+CLAUDE.md
+AGENTS.md
+GEMINI.md
+.claude/
+llm/
+_old/
+
+## Testing
+playwright-report/
+test-reports/
+coverage/
+
+deploy
+deploy*
+deploy.sh
+
+staging-*
+staging-front.sh
+staging.api.sh
+
+
+backups/
+
+.quibbler/
+quibbler.sh
+
+docs/example/
+docs/example/*
+docs/screenshots/
+docs/*/*.png
+docs/mockup/*
+docs/mockup/
+docs/no-commit/
+docs/no-commit/*
+security.md
+security.json
+
+.certs/
+.gemini/
+
+ecosystem.config.cjs.bak
+
+# Git worktrees
+.worktrees/
+
+# Local Python staging runtime artifacts
+server/python-services/ytmusic/.venv/
+server/python-services/ytmusic/**/__pycache__/
+server/python-services/ytmusic/**/*.pyc

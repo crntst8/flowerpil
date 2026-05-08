@@ -1,0 +1,487 @@
+/* ========================================
+   LAYOUT & STRUCTURE
+   ======================================== */
+
+.page {
+  background: #f4f4f4;
+  min-height: 100vh;
+}
+
+/* ========================================
+   HEADER
+   ======================================== */
+
+.perfHeader {
+  width: 100%;
+  border-bottom: 1px solid #d1d5db;
+  background: #000;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.perfHeaderContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.25rem 1.5rem 1rem 1.5rem;
+}
+
+.perfLogoLink {
+  display: inline-flex;
+  align-items: flex-end;
+  text-decoration: none;
+  transition: opacity 0.2s ease-out;
+}
+
+.perfLogoLink:hover {
+  opacity: 0.85;
+}
+
+.perfLogo {
+  height: 56px;
+  width: auto;
+  max-width: 90px;
+  object-fit: contain;
+  display: block;
+}
+
+.headerAction {
+  font-family: 'Monaco', 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #fefefe;
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: text-decoration 0.15s ease-out;
+}
+
+.headerAction:hover {
+  text-decoration: underline;
+}
+
+/* ========================================
+   BODY & CONTENT
+   ======================================== */
+
+.body {
+  padding: 4rem 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.5rem;
+}
+
+.headerRow {
+  display: grid;
+  gap: 0.75rem;
+  align-items: center;
+  justify-items: center;
+  text-align: center;
+  width: 100%;
+  max-width: min(820px, 92vw);
+  padding: 0;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* ========================================
+   TYPOGRAPHY
+   ======================================== */
+
+.pageTitle {
+  margin: 0;
+  display: inline-block;
+  max-width: min(22ch, 100%);
+  font-size: clamp(2rem, 6vw + 0.25rem, 4.2rem);
+  line-height: 1.02;
+  letter-spacing: -0.9px;
+  text-transform: none;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-weight: 700;
+  padding-bottom: 0.5rem;
+  text-wrap: balance;
+  color: #000;
+}
+
+.description {
+  margin: 0.75rem 0 0;
+  display: inline-block;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-size: 1.125rem;
+  font-weight: 400;
+  color: #374151;
+  max-width: min(58ch, 88vw);
+  text-align: center;
+  line-height: 1.65;
+  text-wrap: balance;
+}
+
+/* ========================================
+   GRID
+   ======================================== */
+
+.fullBleedGrid {
+  width: min(1100px, 92vw);
+  margin: 0 auto 3rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+  padding: 1rem 1rem 1rem;
+  position: relative;
+}
+
+.tile {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+}
+
+.tileLink,
+.tileButton {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  color: #fff;
+  transition: transform 0.25s ease-out;
+}
+
+.tileButton {
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.tileLink:focus-visible,
+.tileButton:focus-visible {
+  outline: 3px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.tileImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.tileFallback {
+  width: 100%;
+  height: 100%;
+  background: #000;
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-family: 'Monaco', 'Courier New', monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+}
+
+.overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  padding: 1rem 1.125rem;
+  box-sizing: border-box;
+  pointer-events: none;
+  background: linear-gradient(
+    to left,
+    rgba(0, 0, 0, 0.82) 0%,
+    rgba(0, 0, 0, 0.82) 65%,
+    rgba(0, 0, 0, 0.798) 85%,
+    rgba(0, 0, 0, 0.745) 100%
+  );
+}
+
+.overlayText {
+  width: auto;
+  max-width: 89%;
+  margin-left: auto;
+  text-align: right;
+  color: #fff;
+  font-family: 'Times New Roman', Times, Georgia, serif;
+  font-size: 2rem;
+  font-weight: 100;
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+  word-spacing: -0.05em;
+  word-break: keep-all;
+  overflow-wrap: normal;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 0.25rem 0;
+}
+
+.overlayLine {
+  display: block;
+  width: 100%;
+  white-space: nowrap;
+}
+
+/* ========================================
+   MESSAGES
+   ======================================== */
+
+.message {
+  font-family: 'Monaco', 'Courier New', monospace;
+  color: #6b7280;
+  padding: 1rem;
+}
+
+/* ========================================
+   MEGAPLAYLIST BUTTON
+   ======================================== */
+
+.megaplaylistContainer {
+  width: min(1100px, 92vw);
+  margin: 2rem auto 3rem;
+}
+
+.megaplaylistButton {
+  width: 100%;
+  height: 120px;
+  position: relative;
+  overflow: hidden;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s ease-out;
+}
+
+.megaplaylistButton:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.megaplaylistButton:focus-visible {
+  outline: 3px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.megaplaylistImageContainer {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.megaplaylistImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.megaplaylistOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2.5rem;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.85) 0%,
+    rgba(0, 0, 0, 0.6) 70%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+}
+
+.megaplaylistFallback {
+  width: 100%;
+  height: 100%;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2.5rem;
+}
+
+.megaplaylistText {
+  font-family: 'Times New Roman', Times, Georgia, serif;
+  font-size: 3rem;
+  font-weight: 100;
+  color: #fff;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.megaplaylistArrow {
+  font-family: 'Times New Roman', Times, Georgia, serif;
+  font-size: 3rem;
+  color: #fff;
+  line-height: 1;
+}
+
+/* ========================================
+   MODAL
+   ======================================== */
+
+.modalTitle {
+  margin: 0 0 1.5rem;
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #000;
+  text-align: center;
+}
+
+.linkList {
+  display: grid;
+  gap: 1rem;
+}
+
+.dspLink {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  border: 1.5px solid rgba(0, 0, 0, 0.15);
+  background: rgba(0, 0, 0, 0.02);
+  color: #000;
+  text-decoration: none;
+  transition: all 0.2s ease-out;
+  cursor: pointer;
+}
+
+.dspLink:hover {
+  background: rgba(0, 0, 0, 0.06);
+  border-color: rgba(0, 0, 0, 0.25);
+}
+
+.dspLink:focus-visible {
+  outline: 3px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.dspLinkContent {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.dspLinkLabel {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-size: 1.125rem;
+  font-weight: 500;
+}
+
+.dspLinkArrow {
+  font-family: 'Times New Roman', Times, Georgia, serif;
+  font-size: 1.5rem;
+  color: #666;
+  transition: color 0.2s ease-out;
+}
+
+.dspLink:hover .dspLinkArrow {
+  color: #000;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+@media (max-width: 768px) {
+  .perfHeaderContent {
+    padding: 1rem 1.5rem 0.75rem 1.5rem;
+  }
+
+  .perfLogo {
+    height: 50px;
+    max-width: 72px;
+  }
+
+  .body {
+    padding: 1rem 1rem;
+    gap: 1rem;
+  }
+
+  .headerRow {
+    width: 100%;
+    max-width: 100%;
+    padding: 0.5rem;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .fullBleedGrid {
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 2rem 0.5rem 2rem;
+    gap: 0.75rem;
+  }
+
+  .overlay {
+    padding: 0.75rem 0.875rem;
+  }
+
+  .overlayText {
+    font-size: 1.3rem;
+    line-height: 0.96;
+    max-width: 75%;
+  }
+
+  .megaplaylistContainer {
+    width: 100%;
+    margin: 1.5rem auto 2rem;
+  }
+
+  .megaplaylistButton {
+    height: 100px;
+  }
+
+  .megaplaylistText {
+    font-size: 2rem;
+  }
+
+  .megaplaylistArrow {
+    font-size: 2rem;
+  }
+
+  .megaplaylistOverlay,
+  .megaplaylistFallback {
+    padding: 0 1.5rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .overlay {
+    padding: 0.625rem 0.75rem;
+  }
+
+  .overlayText {
+    font-size: 1.125rem;
+    line-height: 0.98;
+    max-width: 78%;
+  }
+}
+
+@media (max-width: 900px) and (min-width: 601px) {
+  .overlayText {
+    font-size: 1.3rem;
+    line-height: 0.96;
+  }
+}

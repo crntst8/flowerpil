@@ -1,0 +1,93 @@
+version: '3.8'
+
+services:
+  linking-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: flowerpil/portable-linking-worker:latest
+    container_name: portable-linking-worker
+    restart: unless-stopped
+
+    # Environment variables - customize these or use .env file
+    environment:
+      # Required: API connection
+      LINKING_API_BASE: ${LINKING_API_BASE:-https://api.flowerpil.io}
+      LINKING_WORKER_KEY: ${LINKING_WORKER_KEY}
+
+      # Optional: Worker configuration
+      LINKING_WORKER_ID: ${LINKING_WORKER_ID:-docker-worker-1}
+      LINKING_PLAYLIST_ID: ${LINKING_PLAYLIST_ID:-}
+      LINKING_BATCH_SIZE: ${LINKING_BATCH_SIZE:-5}
+      LINKING_POLL_INTERVAL_MS: ${LINKING_POLL_INTERVAL_MS:-100}
+      LINKING_HEARTBEAT_INTERVAL_SEC: ${LINKING_HEARTBEAT_INTERVAL_SEC:-60}
+
+      # Platform credentials
+      SPOTIFY_CLIENT_ID: ${SPOTIFY_CLIENT_ID}
+      SPOTIFY_CLIENT_SECRET: ${SPOTIFY_CLIENT_SECRET}
+      TIDAL_CLIENT_ID: ${TIDAL_CLIENT_ID}
+      TIDAL_CLIENT_SECRET: ${TIDAL_CLIENT_SECRET}
+      APPLE_MUSIC_TEAM_ID: ${APPLE_MUSIC_TEAM_ID}
+      APPLE_MUSIC_KEY_ID: ${APPLE_MUSIC_KEY_ID}
+      APPLE_MUSIC_PRIVATE_KEY: ${APPLE_MUSIC_PRIVATE_KEY:-}
+      APPLE_MUSIC_PRIVATE_KEY_PATH: ${APPLE_MUSIC_PRIVATE_KEY_PATH:-}
+      APPLE_MUSIC_STOREFRONT: ${APPLE_MUSIC_STOREFRONT:-us}
+
+      # TLS/SSL
+      NODE_TLS_REJECT_UNAUTHORIZED: ${NODE_TLS_REJECT_UNAUTHORIZED:-0}
+
+      # Health check & monitoring
+      HEALTH_CHECK_ENABLED: ${HEALTH_CHECK_ENABLED:-true}
+      HEALTH_CHECK_PORT: ${HEALTH_CHECK_PORT:-3001}
+      METRICS_ENABLED: ${METRICS_ENABLED:-true}
+
+      # Logging
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      LOG_FORMAT: ${LOG_FORMAT:-json}
+
+      # Shutdown
+      SHUTDOWN_TIMEOUT_MS: ${SHUTDOWN_TIMEOUT_MS:-30000}
+
+    # Mount Apple Music private key if using file path
+    volumes:
+      - ${APPLE_MUSIC_PRIVATE_KEY_FILE:-./keys}:/app/keys:ro
+
+    # Expose health check port
+    ports:
+      - "${HEALTH_CHECK_PORT:-3001}:3001"
+
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+    # Health check
+    healthcheck:
+      test: ["CMD", "node", "-e", "const http = require('http'); const options = { host: 'localhost', port: process.env.HEALTH_CHECK_PORT || 3001, path: '/health', timeout: 5000 }; const req = http.request(options, (res) => { if (res.statusCode === 200) { process.exit(0); } else { process.exit(1); } }); req.on('error', () => process.exit(1)); req.end();"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+# Example usage:
+# 1. Copy .env.example to .env and fill in your values
+# 2. Run: docker-compose up -d
+# 3. View logs: docker-compose logs -f
+# 4. Check health: curl http://localhost:3001/health
+# 5. View metrics: curl http://localhost:3001/metrics
+# 6. Stop: docker-compose down
+
+# To scale workers:
+# docker-compose up -d --scale linking-worker=3

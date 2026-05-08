@@ -1,0 +1,764 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Creating a Playlist: Qobiz Flow</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="2b835cd3-78e0-80ba-91f1-c723204500b7" class="page sans"><header><h1 class="page-title">Creating a Playlist: Qobiz Flow</h1><p class="page-description"></p></header><div class="page-body"><h1 id="2b835cd3-78e0-8032-a6c5-e290fc3a0bf7" class="block-color-gray_background">Getting Started</h1><div id="2b835cd3-78e0-802b-986f-e9460c1d13b9" class="column-list"><div id="2b835cd3-78e0-8082-b283-d33dbd3f08aa" style="width:50%" class="column"><p id="2b835cd3-78e0-800e-bb12-cf4e141c1222" class="">
+</p><p id="2b835cd3-78e0-8096-b5b9-cd397affc555" class="">
+</p><h2 id="2b835cd3-78e0-8003-889d-d7eaf3be42ce" class="block-color-default_background">1. Once logged in, open CREATE PLAYLIST</h2><p id="2b835cd3-78e0-806d-9e53-f3bb4b411214" class="">
+</p></div><div id="2b835cd3-78e0-802a-87b9-ebe73bc3d911" style="width:50%" class="column"><figure id="2b835cd3-78e0-805b-97a6-e9cc9339fbd1" class="image" style="text-align:right"><a href="Creating%20a%20Playlist%20Qobiz%20Flow/1b54dc2b-dffa-49a4-9537-1d23830b0ef6.png"><img style="width:911.448275862069px" src="Creating%20a%20Playlist%20Qobiz%20Flow/1b54dc2b-dffa-49a4-9537-1d23830b0ef6.png"/></a></figure></div></div><div id="2b835cd3-78e0-8018-9ef0-ffd2ee05a09c" class="column-list"><div id="2b835cd3-78e0-807c-b148-de28c82532b4" style="width:50%" class="column"><figure id="2b835cd3-78e0-805a-896e-c8914cb39aa3" class="image"><a href="Creating%20a%20Playlist%20Qobiz%20Flow/tracklist-clear.jpg"><img style="width:624px" src="Creating%20a%20Playlist%20Qobiz%20Flow/tracklist-clear.jpg"/></a></figure></div><div id="2b835cd3-78e0-8044-80b7-d99590d141d4" style="width:50.000000000000014%" class="column"><p id="2b835cd3-78e0-80fb-89cf-e365b58305c6" class="">
+</p><p id="2b835cd3-78e0-80b7-aa12-f9e79603da28" class="">
+</p><h2 id="2b835cd3-78e0-80ab-88e7-d1247b2cb391" class="">2. Toggle the <strong>Import Tools</strong>  </h2><p id="2b835cd3-78e0-809f-8e34-ee89d294cc2f" class="">
+</p></div></div><div id="2b835cd3-78e0-80a9-b03e-e6ae254fc4f2" class="column-list"><div id="2b835cd3-78e0-805e-9491-d0f028fc3c9e" style="width:50%" class="column"><p id="2b835cd3-78e0-80ab-82e1-dce8aefd80ce" class="">
+</p><h3 id="2b835cd3-78e0-80bf-adf3-d05746b0e750" class="">Navigate to Qobiz, paste your playlist URL and click <strong>Import</strong></h3><p id="2b835cd3-78e0-80af-b2d0-c6f9a808e5d5" class="">
+</p><p id="2b835cd3-78e0-801b-abbb-d864daca73d9" class="">
+</p><p id="2b835cd3-78e0-8064-bd8f-f8829ad03155" class="">
+</p></div><div id="2b835cd3-78e0-8047-bcaf-f96759385c76" style="width:50%" class="column"><figure id="2b835cd3-78e0-8024-914d-c50500e3c3bc" class="image"><a href="Creating%20a%20Playlist%20Qobiz%20Flow/qobiz-url.jpg"><img style="width:576px" src="Creating%20a%20Playlist%20Qobiz%20Flow/qobiz-url.jpg"/></a></figure><figure class="block-color-yellow_background callout" style="white-space:pre-wrap;display:flex" id="2b835cd3-78e0-80e8-904c-e88af9b347b6"><div style="font-size:1.5em"><span class="icon">⚠️</span></div><div style="width:100%"><h3 id="2b835cd3-78e0-8098-816f-cecb6398fbb2" class="">Import takes roughly 1-3 seconds per song - even if it seems stuck it’ll tell you if something goes wrong, so just give it a tic!</h3></div></figure><p id="2b835cd3-78e0-8005-b40b-f1b6fac672fc" class="">
+</p></div></div><p id="2b835cd3-78e0-80fc-85c2-f7e6cd19c069" class="">
+</p><h1 id="2b835cd3-78e0-8087-b10e-ef2d26267233" class="block-color-gray_background">Step 1: Track Editor</h1><p id="2b835cd3-78e0-8010-8b0b-eb70510d332c" class="">Once finished, tracks will appear in the editor. You can adjust / add the metadata and drag around to reorder. </p><figure id="2b835cd3-78e0-80ea-8692-e3b4c5016e4a" class="image"><a href="Creating%20a%20Playlist%20Qobiz%20Flow/track_row.jpg"><img style="width:681.984375px" src="Creating%20a%20Playlist%20Qobiz%20Flow/track_row.jpg"/></a></figure><figure class="block-color-yellow_background callout" style="white-space:pre-wrap;display:flex" id="2b835cd3-78e0-804a-b026-cfa54a198609"><div style="font-size:1.5em"><span class="icon">⚠️</span></div><div style="width:100%"><p id="2b835cd3-78e0-80d8-8fee-e0e3fc8fe189" class="">Qobiz doesn’t offer direct access to their platform, so we use a custom-built solution. <strong>Be sure to double check that it got all the tracks accurately!</strong></p></div></figure><div id="2b835cd3-78e0-8010-9a7f-f0c5f99b60fd" class="column-list"><div id="2b835cd3-78e0-8009-8d28-e264ceb2616d" style="width:50%" class="column"><h3 id="2b835cd3-78e0-8000-ad43-efbca785b3f7" class="block-color-blue_background">Track Quotes</h3><p id="2b835cd3-78e0-800c-afaa-d3a69e512fbf" class="">You can add quotes<strong> that will ammend on the top of the track if you’d like to provide additional context, thoughts, feelings.</strong></p></div><div id="2b835cd3-78e0-80a6-b1a7-f77927996afb" style="width:50%" class="column"><h3 id="2b835cd3-78e0-80c8-864f-e93c0e24ae58" class=""><mark class="highlight-blue_background"><strong>Adding Custom Sources [Bandcamp, Soundlcoud, Youtube etc)</strong></mark></h3><p id="2b835cd3-78e0-8040-b1c0-d262da70ddce" class="">Open the <strong>METADATA </strong>editor in the track row and navigate to <strong>Custom Sources</strong> to add links to other platforms of your choosing </p><p id="2b835cd3-78e0-8079-899f-f6ac885ed605" class="">
+</p></div></div><h1 id="2b835cd3-78e0-8037-b629-de1fff99b467" class="block-color-gray_background">Step 2: Playlist Details</h1><p id="2b835cd3-78e0-800b-862d-cdeaff2a25ac" class="">Once you’re happy with the track order, metadata and quotes, move on to edit the <strong>Playlist Details</strong>. </p><p id="2b835cd3-78e0-805b-9bfd-f7645cb5331c" class="">It’s mostly straightfoward things - title, short description (one-liner), full description (rich-text/linebreaks if you want longer text),</p><p id="2b835cd3-78e0-80eb-9309-cd8fc44d96e4" class="">There’s some extra bits and bobs such as:</p><h3 id="2b835cd3-78e0-80d6-a0ef-dd9473d9801c" class="">Genres  </h3><p id="2b835cd3-78e0-80b6-a9d6-e59a663323f2" class="">These are displayed on the <strong>homepage links</strong> to the playlsits and are <strong>added manually</strong>. </p><div id="2b835cd3-78e0-80f5-a6cf-e27e90f859f4" class="column-list"><div id="2b835cd3-78e0-801f-8e51-c669f4df5774" style="width:43.75%" class="column"><p id="2b835cd3-78e0-80b6-8af9-dbc45adbaa38" class="block-color-blue_background"><strong>Genre Hints</strong></p><p id="2b835cd3-78e0-80cd-8d62-d9d9e1b25b30" class="">Just autocomplete based on what you type - click to fillout.  <div class="indented"><figure id="2b835cd3-78e0-8077-a1d6-d275e06e5c49" class="image"><a href="Creating%20a%20Playlist%20Qobiz%20Flow/f972472b-3370-43cf-8099-7ecc572a5859.png"><img style="width:480px" src="Creating%20a%20Playlist%20Qobiz%20Flow/f972472b-3370-43cf-8099-7ecc572a5859.png"/></a></figure><p id="2b835cd3-78e0-8063-8b6f-e06257f35cbf" class=""><div class="indented"><p id="2b835cd3-78e0-8028-8abf-f26885784c5f" class="">                                           👇</p></div></p><figure id="2b835cd3-78e0-8004-b51a-f85b449bbbc3" class="image"><a href="Creating%20a%20Playlist%20Qobiz%20Flow/genre_apply.jpg"><img style="width:480px" src="Creating%20a%20Playlist%20Qobiz%20Flow/genre_apply.jpg"/></a></figure></div></p></div><div id="2b835cd3-78e0-80c1-8a43-f58d89c2b0fe" style="width:56.25%" class="column"><p id="2b835cd3-78e0-8071-9ab3-f06a3320bf96" class="block-color-blue_background"><strong>Custom Genres</strong></p><p id="2b835cd3-78e0-80ac-b1cd-c8faa6d5878f" class="">If you want to add your own genre, you can just ignore the hints and add!</p><figure id="2b835cd3-78e0-8049-874e-cd225b9cdeea" class="image"><a href="Creating%20a%20Playlist%20Qobiz%20Flow/2486db42-893a-4694-a4c6-d3df0c12ee26.png"><img style="width:528px" src="Creating%20a%20Playlist%20Qobiz%20Flow/2486db42-893a-4694-a4c6-d3df0c12ee26.png"/></a></figure><p id="2b835cd3-78e0-80fd-a2bb-d75c4fc67437" class="">                                                           👇</p><figure id="2b835cd3-78e0-80b8-adff-d50aacfd1582" class="image"><a href="Creating%20a%20Playlist%20Qobiz%20Flow/69215c13-6abf-4073-b0a4-509450cb2335.png"><img style="width:528px" src="Creating%20a%20Playlist%20Qobiz%20Flow/69215c13-6abf-4073-b0a4-509450cb2335.png"/></a></figure><p id="2b835cd3-78e0-80ea-b438-d9bc2d105bbc" class="">
+</p></div></div><hr id="2b835cd3-78e0-808f-b748-fb5ba0114681"/><h3 id="2b835cd3-78e0-80db-9ea2-e0a27cfda892" class="block-color-blue_background">Call-To-Action Button</h3><div id="2b835cd3-78e0-80a5-baf4-dd26adc95fe7" class="column-list"><div id="2b835cd3-78e0-8020-ae29-fad71a928968" style="width:50%" class="column"><p id="2b835cd3-78e0-804d-8f0f-fa36a1b46d96" class="">
+</p><p id="2b835cd3-78e0-80c1-b5aa-c255f0cf5e18" class=""><strong>You can add a link to any platform with your own CTA </strong></p><figure id="2b835cd3-78e0-801b-a93f-deaf94410229" class="image"><a href="Creating%20a%20Playlist%20Qobiz%20Flow/cta.jpg"><img style="width:624px" src="Creating%20a%20Playlist%20Qobiz%20Flow/cta.jpg"/></a></figure><p id="2b835cd3-78e0-805b-a577-e7b069c5df40" class="">
+</p><p id="2b835cd3-78e0-8037-b59f-c625669622d8" class="">
+</p><figure id="2b835cd3-78e0-80b1-89ab-d3386707353c" class="image"><a href="Creating%20a%20Playlist%20Qobiz%20Flow/image.png"><img style="width:588px" src="Creating%20a%20Playlist%20Qobiz%20Flow/image.png"/></a></figure></div><div id="2b835cd3-78e0-8070-b7c7-ff94035779fe" style="width:49.99999999999999%" class="column"><p id="2b835cd3-78e0-80f6-917a-de1206c110d6" class=""><strong>Expand the add icon section if you want to use your own brand</strong></p><figure id="2b835cd3-78e0-8025-93f7-cc8b132ca4d4" class="image"><a href="Creating%20a%20Playlist%20Qobiz%20Flow/icon.jpg"><img style="width:576px" src="Creating%20a%20Playlist%20Qobiz%20Flow/icon.jpg"/></a></figure><p id="2b835cd3-78e0-80a5-ab9b-cd4b075c6059" class="">
+</p><p id="2b835cd3-78e0-8095-a1ca-f34977b3b483" class="">
+</p><p id="2b835cd3-78e0-80c8-a7e1-dd3e246f8c67" class="">No icon will default back to this nice lil flower. </p></div></div><p id="2b835cd3-78e0-80e6-bfd1-cdbefcbc2216" class="">
+</p><h1 id="2b835cd3-78e0-8050-a820-d250258e4b35" class="block-color-teal_background">Step 3: Playlist Details</h1><div id="2b835cd3-78e0-806c-abcb-c0c1bb6d26dd" class="column-list"><div id="2b835cd3-78e0-804b-a987-f459125bd2b4" style="width:50%" class="column"><p id="2b835cd3-78e0-80ef-8a02-e8f53f9bf63d" class="">
+</p><p id="2b835cd3-78e0-8093-9fe3-d3fbd31edf02" class="">
+</p><p id="2b835cd3-78e0-8091-bd68-f4d480868371" class="">
+</p><p id="2b835cd3-78e0-8098-b6e0-e6a109870293" class="">
+</p><p id="2b835cd3-78e0-8075-8bf8-fc65c6b524df" class="">
+</p><h2 id="2b835cd3-78e0-808c-b661-e5c762a674a5" class="">Upload an image to use as the playlist cover!</h2><p id="2b835cd3-78e0-8050-9055-ece47ac511b6" class="">
+</p></div><div id="2b835cd3-78e0-80b6-a49a-d87ea00aa3e9" style="width:50%" class="column"><figure id="2b835cd3-78e0-8014-8871-db2414bb16bc" class="image"><a href="Creating%20a%20Playlist%20Qobiz%20Flow/da059dce-d123-49d3-8a1e-29cd995eb764.png"><img style="width:434.78770131771597px" src="Creating%20a%20Playlist%20Qobiz%20Flow/da059dce-d123-49d3-8a1e-29cd995eb764.png"/></a></figure></div></div><p id="2b835cd3-78e0-8072-9cb8-e903b6edfe1b" class="">
+</p><hr id="2b835cd3-78e0-80fe-9228-db4c8c057910"/><h1 id="2b835cd3-78e0-806e-a42e-ce27351d1b6f" class="block-color-teal_background">Step 4: Publish Stage</h1><div id="2b835cd3-78e0-8089-bb13-e9a378cf6def" class="column-list"><div id="2b835cd3-78e0-8062-97a1-eb7f2334d963" style="width:25%" class="column"><figure id="2b835cd3-78e0-8033-8513-fa7e668b83fb" class="image"><a href="Creating%20a%20Playlist%20Qobiz%20Flow/flowerpil_dsp.jpg"><img style="width:306.4921875px" src="Creating%20a%20Playlist%20Qobiz%20Flow/flowerpil_dsp.jpg"/></a></figure><p id="2b835cd3-78e0-8027-b9f7-e35eac432acc" class="">
+</p><p id="2b835cd3-78e0-808c-84d8-df1b420df8dc" class="">
+</p><figure id="2b835cd3-78e0-80dc-9b6b-e690b19bd23a" class="image"><a href="Creating%20a%20Playlist%20Qobiz%20Flow/image%201.png"><img style="width:306.484375px" src="Creating%20a%20Playlist%20Qobiz%20Flow/image%201.png"/></a></figure></div><div id="2b835cd3-78e0-80b0-bc90-ffe3ac5d99c9" style="width:75%" class="column"><p id="2b835cd3-78e0-801d-9442-cbe6967f159f" class="">
+</p><p id="2b835cd3-78e0-80d1-8c79-ce7f337d7cfc" class="">
+</p><h2 id="2b835cd3-78e0-8005-82f7-c7ce876a5fd1" class="">Publish &amp; Export</h2><p id="2b835cd3-78e0-80b8-b5f4-f84ada7698b2" class=""><strong>Exporting to site + DSPs (Spotify, Apple Music &amp; TIDAL)</strong></p><p id="2b835cd3-78e0-80af-9858-e8198b6167a1" class="">Select the platforms you wish to export to and configure which account to use (select Flowerpil if you dont have one)</p><figure class="block-color-yellow_background callout" style="white-space:pre-wrap;display:flex" id="2b835cd3-78e0-808b-bc02-f859bce1469a"><div style="font-size:1.5em"><span class="icon">⚠️</span></div><div style="width:100%"><h3 id="2b835cd3-78e0-80db-9cb8-c260c938e291" class="">The Apple Music playlist link won’t appear straight away on the page</h3><p id="2b835cd3-78e0-80e1-83b5-c7986d1b9787" class="">the URL will appear on the page after we attach it (they make you literally click a button in the app)</p></div></figure><p id="2b835cd3-78e0-8019-b3da-cdbb6b842b71" class="">
+</p><p id="2b835cd3-78e0-80af-9d31-ddfb36654c44" class="">
+</p><p id="2b835cd3-78e0-80ea-b100-c13fad12a1ab" class="">
+</p><h2 id="2b835cd3-78e0-8094-b0a9-e0c74880cdbf" class="">Publish Only</h2><p id="2b835cd3-78e0-805d-a1de-d6638d6e1ccd" class=""><strong>This will skip the export stage and just publish to the site. </strong></p><p id="2b835cd3-78e0-808e-86c7-e6da36fca204" class="">You can go back and export/adjust in the editor after publication. </p><p id="2b835cd3-78e0-80c8-87d9-ec24cb690f98" class="">
+</p></div></div><hr id="2b835cd3-78e0-80e9-8c6d-ce76e6f5bab7"/><h1 id="2b835cd3-78e0-80e2-bf3d-eeb6dfd87ff6" class="block-color-teal_background">Step 5: Published!</h1><div id="2b835cd3-78e0-806e-9f32-e3924e316a56" class="column-list"><div id="2b835cd3-78e0-8000-a3ef-ce6e2d903786" style="width:50%" class="column"><p id="2b835cd3-78e0-801b-95fc-d56b45e32642" class="">
+</p><p id="2b835cd3-78e0-80da-a5df-d0d341732589" class="">
+</p><p id="2b835cd3-78e0-807e-8586-c332c8b22a8d" class="">
+</p><p id="2b835cd3-78e0-803e-a936-df3031867da4" class=""><strong>Homepage</strong><div class="indented"><figure id="2b835cd3-78e0-80c5-acc0-d899ce0f3b1a" class="image"><a href="Creating%20a%20Playlist%20Qobiz%20Flow/expandable.jpg"><img style="width:672px" src="Creating%20a%20Playlist%20Qobiz%20Flow/expandable.jpg"/></a></figure><p id="2b835cd3-78e0-80ee-9210-f49e0be11e49" class="">
+</p></div></p></div><div id="2b835cd3-78e0-8004-84db-de3b57f99f58" style="width:50%" class="column"><p id="2b835cd3-78e0-803c-ad1a-ddaf8bf03eef" class=""><strong>Playlist Page</strong></p><figure id="2b835cd3-78e0-80cf-ab48-d2698e8e2a97" class="image"><a href="Creating%20a%20Playlist%20Qobiz%20Flow/publushed.jpg"><img style="width:816px" src="Creating%20a%20Playlist%20Qobiz%20Flow/publushed.jpg"/></a></figure></div></div><p id="2b835cd3-78e0-8042-8eb1-dac251ee9af3" class="">
+</p><h1 id="2b835cd3-78e0-809c-9e02-faa4b5fd7027" class="block-color-teal_background">Want to share?</h1><h3 id="2b835cd3-78e0-8079-b623-d689e1304edc" class="">You can share by opening the <strong>SHARE button </strong>on the playlist page</h3><div id="2b835cd3-78e0-8002-987a-ed33c11838fb" class="column-list"><div id="2b835cd3-78e0-800e-92ff-d05c0344e014" style="width:25%" class="column"><figure id="2b835cd3-78e0-802d-b4aa-de4f849968ed" class="image"><a href="Creating%20a%20Playlist%20Qobiz%20Flow/image%202.png"><img style="width:240px" src="Creating%20a%20Playlist%20Qobiz%20Flow/image%202.png"/></a></figure><figure id="2b835cd3-78e0-80a8-a515-f1d45990eb95" class="image"><a href="Creating%20a%20Playlist%20Qobiz%20Flow/image%203.png"><img style="width:288px" src="Creating%20a%20Playlist%20Qobiz%20Flow/image%203.png"/></a></figure></div><div id="2b835cd3-78e0-80bc-8f68-fd4728e0d808" style="width:75%" class="column"><p id="2b835cd3-78e0-807f-b643-ce4fe4de1dad" class="">
+</p><p id="2b835cd3-78e0-8046-9327-c03947d5fa36" class="">
+</p><p id="2b835cd3-78e0-80af-8949-ec9bad8c7373" class="">
+</p><p id="2b835cd3-78e0-80bb-95d2-d49b76298028" class="">
+</p><h3 id="2b835cd3-78e0-8011-b322-c50f676ac2eb" class="">Sharing to <strong>Instagram </strong>will generate an image </h3><p id="2b835cd3-78e0-8037-8868-ed26b5b80d2e" class="">Use the <strong>copy URL</strong> function before doing this so you can paste into the <strong>link sticker</strong> in IG</p><p id="2b835cd3-78e0-8041-8c04-e2497f289717" class="">
+</p><p id="2b835cd3-78e0-8056-b008-e7935713b253" class="">
+</p><p id="2b835cd3-78e0-8052-8e7d-e422c5b594bc" class="">
+</p><p id="2b835cd3-78e0-8057-b6a9-df2a1fce51f8" class="">
+</p><p id="2b835cd3-78e0-80ab-a88b-e4ff37d51b74" class="">
+</p><p id="2b835cd3-78e0-8013-bacf-dcf3fe1066bc" class="">
+</p><p id="2b835cd3-78e0-8034-9708-e9480e6dc40d" class="">
+</p><p id="2b835cd3-78e0-8010-a85b-c42a7d408200" class="">
+</p><p id="2b835cd3-78e0-80aa-a6ba-f6593361d2e8" class="">
+</p><p id="2b835cd3-78e0-8075-acdd-e94f5b76c6a6" class="">
+</p><h3 id="2b835cd3-78e0-80d1-9c22-db9dd6bcabea" class="">You can use the URL copied in the tracks (the link button) to share induvidual tracks</h3></div></div><p id="2b835cd3-78e0-808b-8b1b-c9946eee3d2b" class="">
+</p><h2 id="2b835cd3-78e0-80dd-bdea-cbf79fa855c5" class="block-color-teal_background">Need to edit?</h2><div id="2b835cd3-78e0-8090-ac3f-ed58d9303c7c" class="column-list"><div id="2b835cd3-78e0-809c-9a01-e8b7fc10da57" style="width:50%" class="column"><p id="2b835cd3-78e0-8053-8132-fae78aa6eefb" class="">
+</p><h3 id="2b835cd3-78e0-8079-8211-fbce90c6c8fb" class="">Use the sidebar on the homepage to go to <strong>DASHBOARD</strong> and hit EDIT on your playlist</h3><p id="2b835cd3-78e0-804e-89de-c7b3c729e331" class="">
+</p></div><div id="2b835cd3-78e0-8004-a9e7-e4a2d4964e4c" style="width:50%" class="column"><figure id="2b835cd3-78e0-80a8-bff0-f0d36dd72316" class="image"><a href="Creating%20a%20Playlist%20Qobiz%20Flow/preedit.jpg"><img style="width:504px" src="Creating%20a%20Playlist%20Qobiz%20Flow/preedit.jpg"/></a></figure></div></div><p id="2b835cd3-78e0-80f8-b7c1-f71f75add196" class="">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

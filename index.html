@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="description" content="Playlists by people, not platforms." />
+  <title>flowerpil.io</title>
+
+  <!-- DNS prefetch for third-party domains -->
+  <link rel="dns-prefetch" href="https://maps.googleapis.com">
+  <link rel="preconnect" href="https://maps.googleapis.com">
+
+  <!-- Preload fonts -->
+  <link rel="preload" href="/fonts/PaperMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
+
+  <!-- Google Fonts - Source Serif Pro for editorial content -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&display=swap" rel="stylesheet">
+
+  <!-- Mobile optimization -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Flowerpil">
+  <meta name="theme-color" content="#000000">
+  <meta name="msapplication-TileColor" content="#000000">
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/manifest.json">
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+
+  <!-- Apple Touch Icon -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon-180x180.png">
+
+  <!-- Android Chrome Icons -->
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/icons/android-chrome-512x512.png">
+  
+  <style>
+    /* Critical CSS to prevent FOUC */
+
+    /* Font face with display strategy */
+    @font-face {
+      font-family: 'Paper Mono';
+      src: url('/fonts/PaperMono-Regular.woff2') format('woff2');
+      font-display: swap;
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    html {
+      height: 100%;
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: #000000;
+      color: #ffffff;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+      min-height: calc(var(--vh, 1vh) * 100);
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+    
+    #root {
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+      min-height: calc(var(--vh, 1vh) * 100);
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+    
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: 'Paper Mono', monospace;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .loading::after {
+      content: '.';
+      animation: loading-dots 1.5s infinite;
+    }
+    
+    @keyframes loading-dots {
+      0% { content: '.'; }
+      33% { content: '..'; }
+      66% { content: '...'; }
+    }
+  </style>
+  <script id="flowerpil-bootstrap-data" type="application/json">
+    {"siteSettings":null,"genres":[]}
+  </script>
+  <script>
+    (function bootstrapGlobal(){
+      const globalKey = '__FLOWERPIL_BOOTSTRAP__';
+      if (window[globalKey]) return;
+      try {
+        const node = document.getElementById('flowerpil-bootstrap-data');
+        const payload = node && node.textContent ? JSON.parse(node.textContent) : {};
+        window[globalKey] = payload || {};
+      } catch (error) {
+        console.warn('Failed to parse bootstrap payload', error);
+        window[globalKey] = {};
+      }
+    })();
+  </script>
+  <script type="module">
+    const loadGooglePlaces = (() => {
+      let loadingPromise = null;
+
+      return async () => {
+        // If already loading or loaded, return the existing promise
+        if (loadingPromise) return loadingPromise;
+
+        // If script already exists and Google Maps is ready, resolve immediately
+        if (document.querySelector('script[data-google-places]') && window.google?.maps?.places) {
+          return Promise.resolve();
+        }
+
+        loadingPromise = (async () => {
+          // Get API key
+          let apiKey = (typeof import.meta !== 'undefined' && import.meta?.env?.VITE_GOOGLE_PLACES_API_KEY) || '';
+          if (!apiKey) {
+            try {
+              const response = await fetch('/api/v1/config/google-places-key', { credentials: 'include' });
+              if (response.ok) {
+                const data = await response.json();
+                if (data?.success && data.key) {
+                  apiKey = data.key;
+                }
+              }
+            } catch (error) {
+              if (typeof import.meta !== 'undefined' && import.meta?.env?.DEV) {
+                console.warn('Failed to fetch Google Places key from config endpoint:', error);
+              }
+            }
+          }
+
+          if (!apiKey) {
+            if (typeof import.meta !== 'undefined' && import.meta?.env?.DEV) {
+              console.warn('Google Places API key not configured; autocomplete remains disabled.');
+            }
+            throw new Error('Google Places API key not available');
+          }
+
+          // Check if script already exists
+          if (document.querySelector('script[data-google-places]')) {
+            // Wait for google.maps.places to be available
+            return new Promise((resolve, reject) => {
+              const timeout = setTimeout(() => {
+                reject(new Error('Google Places API script loaded but library not available'));
+              }, 10000);
+
+              const checkReady = () => {
+                if (window.google?.maps?.places) {
+                  clearTimeout(timeout);
+                  resolve();
+                } else {
+                  setTimeout(checkReady, 100);
+                }
+              };
+              checkReady();
+            });
+          }
+
+          // Create and append script
+          return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
+            script.async = true;
+            script.defer = true;
+            script.dataset.googlePlaces = 'true';
+
+            script.onload = () => {
+              // Wait for google.maps.places to be fully initialized
+              const checkReady = () => {
+                if (window.google?.maps?.places) {
+                  resolve();
+                } else {
+                  setTimeout(checkReady, 100);
+                }
+              };
+              checkReady();
+            };
+
+            script.onerror = () => {
+              loadingPromise = null; // Reset so it can be retried
+              reject(new Error('Failed to load Google Places API script'));
+            };
+
+            document.head.appendChild(script);
+          });
+        })();
+
+        return loadingPromise;
+      };
+    })();
+
+    // Export to window so LocationAutocomplete component can call it on-demand
+    window.loadGooglePlaces = loadGooglePlaces;
+  </script>
+</head>
+<body>
+  <div id="root">
+    <div class="loading">Loading Flowerpil</div>
+  </div>
+  <script type="module" src="/src/main.jsx"></script>
+
+</body>
+</html>

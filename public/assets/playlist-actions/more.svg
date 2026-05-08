@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" role="img" aria-labelledby="title desc">
+  <title id="title">More (horizontal, solid)</title>
+  <desc id="desc">Three solid dots horizontally aligned</desc>
+  <g fill="#000">
+    <circle cx="6" cy="12" r="2"/>
+    <circle cx="12" cy="12" r="2"/>
+    <circle cx="18" cy="12" r="2"/>
+  </g>
+</svg>
